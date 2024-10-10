@@ -35,7 +35,7 @@ const ProductDetails = () => {
   // Construct WhatsApp URL with product details
   const whatsappUrl = `https://wa.me/9548597595?text=I'm%20interested%20in%20buying%20the%20product:%20${encodeURIComponent(
     product.name
-  )}%20for%20$${product.price.toFixed(2)}.`;
+  )}%20for%20${product.price.toFixed(2)} Rs`;
 
   return (
     <div className="container mx-auto p-4 lg:p-6 shadow-lg bg-white rounded-lg mt-8">

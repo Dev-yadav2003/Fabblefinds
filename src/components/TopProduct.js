@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import product5 from "../Utils/product5.jpeg";
 import product25 from "../Utils/product25.jpeg";
 import product2 from "../Utils/product2.jpeg";
@@ -86,14 +86,25 @@ const hampers = [
 const TopProduct = () => {
   const [selectedHamper, setSelectedHamper] = useState(hampers[0]);
   const [mainImage, setMainImage] = useState(hampers[0].mainImage);
+  const [transitioning, setTransitioning] = useState(false);
+  const mainImageRef = useRef(null); // Create a ref for the main image section
 
   const handleImageClick = (img) => {
     setMainImage(img.src);
   };
 
   const handleHamperClick = (hamper) => {
-    setSelectedHamper(hamper);
-    setMainImage(hamper.mainImage);
+    setTransitioning(true);
+    setTimeout(() => {
+      setSelectedHamper(hamper);
+      setMainImage(hamper.mainImage);
+      setTransitioning(false);
+
+      // Scroll smoothly to the main image
+      if (mainImageRef.current) {
+        mainImageRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 300); // Duration of the transition effect
   };
 
   return (
@@ -102,15 +113,19 @@ const TopProduct = () => {
         🎁 Best Diwali Gifts For Loved Ones 🎁
       </h2>
 
-      <div className="lg:flex lg:justify-between lg:gap-8 items-center">
+      <div
+        className="lg:flex lg:justify-between lg:gap-8 items-center"
+        ref={mainImageRef} // Attach the ref to this section
+      >
         <div className="lg:w-1/2 mb-6 lg:mb-0 mx-auto flex flex-col items-center">
           <img
             src={mainImage}
             alt="Selected Hamper"
-            className="w-full lg:w-[420px] h-80 md:h-96 object-center object-cover rounded-lg shadow-3xl shadow-[#F7ECDE] transition-transform transform hover:scale-105 duration-500 hover:rotate-1 hover:shadow-white"
+            className={`w-full lg:w-[420px] h-80 md:h-96 object-center object-cover rounded-lg shadow-3xl shadow-[#F7ECDE] transition-transform transform duration-500 ${
+              transitioning ? "opacity-0" : "opacity-100"
+            }`}
           />
-          {/* Display price below main image */}
-          <p className=" text-rose-800 font-bold text-center text-2xl mt-4">
+          <p className="text-rose-800 font-bold text-center text-2xl mt-4">
             {selectedHamper.price}
           </p>
         </div>
